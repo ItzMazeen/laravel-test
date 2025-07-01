@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: laravel-php
+  namespace: laravel-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: laravel-php
+  template:
+    metadata:
+      labels:
+        app: laravel-php
+    spec:
+      securityContext:
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+        - name: laravel-php
+          image: itzmazeen/laravel-php:f84f1b09
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9000
+          envFrom:
+            - secretRef:
+                name: laravel-env-secret
+          readinessProbe:
+            exec:
+              command: ["php", "/var/www/laravel/artisan", "--version"]
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          volumeMounts:
+            - name: azure-storage
+              mountPath: /var/www/laravel/storage/app/public
+          lifecycle:
+            postStart:
+              exec:
+                command: ["php", "/var/www/laravel/artisan", "storage:link"]
+      volumes:
+        - name: azure-storage
+          persistentVolumeClaim:
+            claimName: azurefile-pvc

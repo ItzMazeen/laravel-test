@@ -1,0 +1,14 @@
+.git
+node_modules
+tests
+*.log
+.env
+.env.*
+docker-compose.yml
+docker/
+README.md
+*.md
+*.lock
+phpunit.xml
+webpack.mix.js
+.editorconfig

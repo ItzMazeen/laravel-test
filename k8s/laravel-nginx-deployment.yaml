@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: laravel-nginx
+  namespace: laravel-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: laravel-nginx
+  template:
+    metadata:
+      labels:
+        app: laravel-nginx
+    spec:
+      containers:
+        - name: laravel-nginx
+          image: itzmazeen/laravel-nginx:bc801ac7
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          volumeMounts:
+            - name: azure-storage
+              mountPath: /var/www/laravel/storage/app/public
+            - name: azure-storage
+              mountPath: /var/www/laravel/public/storage
+      volumes:
+        - name: azure-storage
+          persistentVolumeClaim:
+            claimName: azurefile-pvc
+
