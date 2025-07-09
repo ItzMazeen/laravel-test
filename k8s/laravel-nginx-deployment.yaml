@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: laravel-nginx
-          image: itzmazeen/laravel-nginx:bc801ac7
+          image: itzmazeen/laravel-nginx:06c7aa27
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -40,4 +40,3 @@ spec:
         - name: azure-storage
           persistentVolumeClaim:
             claimName: azurefile-pvc
-
