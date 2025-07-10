@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: telegraf-config
+  namespace: monitoring
+data:
+  telegraf.conf: |
+    [agent]
+      interval = "10s"
+      round_interval = true
+
+    [[outputs.influxdb]]
+      urls = ["http://influxdb.monitoring.svc.cluster.local:8086"]
+      database = "telegraf"
+      skip_database_creation = false
+
+    [[inputs.cpu]]
+      percpu = true
+      totalcpu = true
+      fielddrop = ["time_*"]
+
+    [[inputs.mem]]
+    [[inputs.disk]]
+    [[inputs.system]]

@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: telegraf
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: telegraf
+  template:
+    metadata:
+      labels:
+        app: telegraf
+    spec:
+      containers:
+        - name: telegraf
+          image: telegraf:1.28
+          env:
+            - name: HOST_PROC
+              value: /rootfs/proc
+            - name: HOST_SYS
+              value: /rootfs/sys
+            - name: HOST_ETC
+              value: /rootfs/etc
+          volumeMounts:
+            - name: proc
+              mountPath: /rootfs/proc
+              readOnly: true
+            - name: sys
+              mountPath: /rootfs/sys
+              readOnly: true
+            - name: etc
+              mountPath: /rootfs/etc
+              readOnly: true
+            - name: telegraf-config
+              mountPath: /etc/telegraf
+              readOnly: true
+      volumes:
+        - name: proc
+          hostPath:
+            path: /proc
+        - name: sys
+          hostPath:
+            path: /sys
+        - name: etc
+          hostPath:
+            path: /etc
+        - name: telegraf-config
+          configMap:
+            name: telegraf-config
