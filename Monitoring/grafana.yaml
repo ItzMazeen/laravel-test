@@ -18,6 +18,21 @@ spec:
           image: grafana/grafana:latest
           ports:
             - containerPort: 3000
+          env:
+            - name: GF_SMTP_ENABLED
+              value: "true"
+            - name: GF_SMTP_HOST
+              value: "smtp.gmail.com:587"
+            - name: GF_SMTP_USER
+              value: "mazeenaljanepro@gmail.com"
+            - name: GF_SMTP_PASSWORD
+              value: "xksbwgduvqnuxnpe"
+            - name: GF_SMTP_SKIP_VERIFY
+              value: "true"
+            - name: GF_SMTP_FROM_ADDRESS
+              value: "admin@ekl.tn"
+            - name: GF_SMTP_FROM_NAME
+              value: "Grafana Alerts"
 ---
 apiVersion: v1
 kind: Service
